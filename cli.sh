@@ -38,11 +38,7 @@ PACKAGES=(
     "lsb-release" "Distro info tool" ON
     "wget" "File downloader" ON
     "curl" "URL tool" ON
-    "vim" "Text editor" ON
     "git" "Version control system" ON
-    "vlc" "Media player" ON
-    "dconf-editor" "GNOME settings editor" ON
-    "gnome-tweaks" "Tweak GNOME desktop" ON
 )
 
 # Create the checklist
@@ -72,7 +68,38 @@ BROWSER=(
     "opera-stable" "Opera web browser" OFF
     "vivaldi-stable" "Vivaldi web browser" OFF
     "tor-browser" "Tor web browser" OFF
-    "zen" "Zenkit web browser" OFF
+    "zen" "Zen web browser" OFF
+)
+
+DEV=(
+    "docker" "Container engine" ON
+    "beekeeper-studio" "Database management" ON
+    "postman" "API development" ON
+)
+
+CODE_EDITOR=(
+    "vscode" "Code editor" ON
+    "neovim" "Code editor" ON
+    "vim" "Text editor" ON
+    "Pycharm" "Code editor for Python" OFF
+    "Intellij-Idea" "Code editor for Java/Kotlin" OFF
+)
+
+MEDIA=(
+    "discord" "Chat and video app" ON
+    "obs-studio" "Video recording and streaming" ON
+    "obsidian" "Note-taking app" ON
+    "vlc" "Media player" ON
+    "rhythmbox" "Music player" OFF
+)
+
+AI=(
+    "ollama" "AI model runner" ON
+)
+
+GNOME=(
+    "dconf-editor" "GNOME settings editor" ON
+    "gnome-tweaks" "Tweak GNOME desktop" ON
 )
 
 CHOICES=$(whiptail --title "Package Manager" --checklist \
@@ -83,9 +110,7 @@ CHOICES=$(whiptail --title "Package Manager" --checklist \
 "twingate" "Zero trust network access" ON \
 "beekeeper-studio" "Database management" ON \
 "ollama" "AI model runner" ON \
-"discord" "Chat and video app" ON \
-"obs-studio" "Video recording and streaming" ON \
-"obsidian" "Note-taking app" ON \
+
 "impression" "Image viewer" ON \
 "postman" "API development" ON \
 

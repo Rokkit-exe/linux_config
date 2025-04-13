@@ -143,6 +143,79 @@ vscode() {
     rm ./vscode.deb
 }
 
+intellij() {
+    installing "intellij-idea-community"
+    local url="https://download.jetbrains.com/idea/ideaIC-2024.1.tar.gz"
+    local tmp_dir="/tmp/intellij"
+    local install_dir="/opt/intellij"
+    local desktop_file="/usr/share/applications/intellij-idea-community.desktop"
+
+    echo "📥 Downloading IntelliJ IDEA Community Edition..."
+    mkdir -p "$tmp_dir"
+    wget -O "$tmp_dir/idea.tar.gz" "$url"
+
+    echo "📦 Extracting IntelliJ..."
+    sudo mkdir -p "$install_dir"
+    sudo tar -xzf "$tmp_dir/idea.tar.gz" --strip-components=1 -C "$install_dir"
+
+    echo "⚙️ Creating symlink..."
+    sudo ln -sf "$install_dir/bin/idea.sh" /usr/local/bin/intellij
+
+    echo "🖥️ Creating desktop entry..."
+    cat <<EOF | sudo tee "$desktop_file" > /dev/null
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=IntelliJ IDEA Community
+Icon=$install_dir/bin/idea.png
+Exec="$install_dir/bin/idea.sh" %f
+Comment=IntelliJ IDEA Community Edition
+Categories=Development;IDE;
+Terminal=false
+StartupWMClass=jetbrains-idea
+EOF
+
+    echo "✅ IntelliJ IDEA installed successfully!"
+    echo "👉 Launch it with: intellij"
+}
+
+pycharm() {
+    installing "PyCharm Community"
+    local url="https://download.jetbrains.com/python/pycharm-community-2024.1.tar.gz"
+    local tmp_dir="/tmp/pycharm"
+    local install_dir="/opt/pycharm"
+    local desktop_file="/usr/share/applications/pycharm-community.desktop"
+
+    echo "📥 Downloading PyCharm Community Edition..."
+    mkdir -p "$tmp_dir"
+    wget -O "$tmp_dir/pycharm.tar.gz" "$url"
+
+    echo "📦 Extracting PyCharm..."
+    sudo mkdir -p "$install_dir"
+    sudo tar -xzf "$tmp_dir/pycharm.tar.gz" --strip-components=1 -C "$install_dir"
+
+    echo "⚙️ Creating symlink..."
+    sudo ln -sf "$install_dir/bin/pycharm.sh" /usr/local/bin/pycharm
+
+    echo "🖥️ Creating desktop entry..."
+    cat <<EOF | sudo tee "$desktop_file" > /dev/null
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=PyCharm Community
+Icon=$install_dir/bin/pycharm.png
+Exec="$install_dir/bin/pycharm.sh" %f
+Comment=PyCharm Community Edition
+Categories=Development;IDE;Python;
+Terminal=false
+StartupWMClass=jetbrains-pycharm
+EOF
+
+    echo "✅ PyCharm installed successfully!"
+    echo "👉 Launch it with: pycharm"
+}
+
+
 ollama() {
     # https://ollama.com/docs/installation
     installing "Ollama"
@@ -166,6 +239,16 @@ numlock() {
     sed -i 's/exit 0//g' /etc/gdm3/Init/Default
 
     echo "exit 0" >> /etc/gdm3/Init/Default
+}
+
+logid() {
+    install "logiops"
+
+    apt install logiops
+
+    cp -f ./logid.cfg /etc/logid.cfg
+    systemctl restart logid
+    echo "logid config modified"
 }
 
 python() {

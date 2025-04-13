@@ -43,3 +43,45 @@ rm -rf /etc/apt/trusted.gpg.d/brave-browser.gpg~
 rm -rf /var/lib/apt/lists/brave-browser*
 rm -rf /var/lib/apt/lists/brave-browser-archive-keyring.gpg
 rm -rf /var/lib/apt/lists/brave-browser-archive-keyring.gpg~
+
+
+
+uninstall_intellij() {
+    echo "🗑️ Uninstalling IntelliJ IDEA Community..."
+
+    # Remove installation directory
+    sudo rm -rf /opt/intellij
+
+    # Remove symlink
+    sudo rm -f /usr/local/bin/intellij
+
+    # Remove desktop entry
+    sudo rm -f /usr/share/applications/intellij-idea-community.desktop
+
+    # Remove JetBrains config and system files
+    rm -rf ~/.config/JetBrains/IdeaIC2024.3
+    rm -rf ~/.local/share/JetBrains/IdeaIC2024.3
+
+    echo "✅ IntelliJ IDEA completely removed."
+}
+
+uninstall_pycharm() {
+    echo "🗑️ Uninstalling PyCharm Community..."
+
+    # Remove installation directory
+    sudo rm -rf /opt/pycharm
+
+    # Remove symlink
+    sudo rm -f /usr/local/bin/pycharm
+
+    # Remove desktop entry
+    sudo rm -f /usr/share/applications/pycharm-community.desktop
+
+    # Remove JetBrains config and system files
+    rm -rf ~/.config/JetBrains/PyCharmCE2024.3
+    rm -rf ~/.local/share/JetBrains/PyCharmCE2024.3
+
+    echo "✅ PyCharm completely removed."
+}
+
+
