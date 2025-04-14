@@ -1,374 +1,86 @@
 #!/bin/bash
 
-installing() {
-    # Install the package
+message_installing() {
+    # Display a message
     echo "------------------------------------------------------------------------"
-    echo -e "\nInstalling $1..."
+    echo -e "\n\n🛠️  \e[33mInstalling$1 \e[0m"
     sleep 1
 }
 
-uninstall() {
-    # Uninstall the package
+message_update() {
+    # Display an update message
     echo "------------------------------------------------------------------------"
-    echo -e "\nUninstalling $1..."
+    echo -e "\n\n🔄 \e[36mUpdating$1 \e[0m"
     sleep 1
 }
 
-flatpak() {
-    # Enable Flatpak support in GNOME Software
+message_uninstalling() {
+    # Display a message
     echo "------------------------------------------------------------------------"
-    apt install flatpak gnome-software-plugin-flatpak -y
-    echo "Installaing Flatpak support in GNOME Software..."
+    echo -e "\n\n🗑️  \e[31mUninstalling$1 \e[0m"
     sleep 1
-    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 }
 
-discord() {
-    # https://discord.com/download
-    installing "Discord"
-
-    flatpak install flathub com.discordapp.Discord -y
+message_done() {
+    # Display a done message
+    echo "------------------------------------------------------------------------"
+    echo -e "\n\n✅ \e[32m$1\e[0m"
+    sleep 1
 }
 
-postman() {
-    # https://www.postman.com/downloads/
-    installing "Postman"
-
-    flatpak install flathub com.getpostman.Postman -y
+message_error() {
+    # Display an error message
+    echo "------------------------------------------------------------------------"
+    echo -e "\n\n❌ \e[31mError: $1 \e[0m"
 }
 
-obsidian() {
-    # https://obsidian.md/download
-    installing "Obsidian"
-
-    flatpak install flathub md.obsidian.Obsidian -y
+message_configure() {
+    # Display a configuration message
+    echo "------------------------------------------------------------------------"
+    echo -e "\n\n⚙️ \e[36mConfiguring: $1 \e[0m"
 }
 
-qbittorrent() {
-    # https://www.qbittorrent.org/download.php
-    installing "qBittorrent"
-
-    flatpak install flathub org.qbittorrent.qBittorrent -y
+message_warning() {
+    # Display a warning message
+    echo "------------------------------------------------------------------------"
+    echo -e "\n\n⚠️ \e[33mWarning: $1 \e[0m"
 }
 
-obs() {
-    # https://obsproject.com/download
-    installing "OBS Studio"
-
-    flatpak install flathub org.obsproject.Studio -y
+message_info() {
+    # Display an info message
+    echo "------------------------------------------------------------------------"
+    echo -e "\n\nℹ️ \e[34mInformation: $1 \e[0m"
 }
 
-impression() {
-    # installing "Impression"
-    installing "Impression"
-    flatpak install flathub io.gitlab.adhami3310.Impression -y
+welcome() {
+    cat ./mycli_ascii.txt
+    echo 
+    echo "------------------------------------------------------------------------"
+    echo "Welcome to the Package Installer Script!"
 }
 
-beekeeper() {
-    # https://docs.beekeeperstudio.io/installation/linux/#deb
-    installing "Beekeeper Studio"
-
-    curl -fsSL https://deb.beekeeperstudio.io/beekeeper.key | gpg --dearmor --output /usr/share/keyrings/beekeeper.gpg \
-    && chmod go+r /usr/share/keyrings/beekeeper.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/beekeeper.gpg] https://deb.beekeeperstudio.io stable main" \
-    | tee /etc/apt/sources.list.d/beekeeper-studio-app.list > /dev/null
-
-    apt update && apt install beekeeper-studio -y
+check_sudo() {
+    # Check if the script is run as root
+    if [ "$EUID" -ne 0 ]; then
+        message_error "Please run as root"
+        exit 1
+    fi
 }
 
-
-brave() {
-    # https://brave.com/linux/
-    installing "Brave Browser"
-
-    curl -fsS https://dl.brave.com/install.sh | sh
+check_debian() {
+    # Check if the system is Debian-based
+    if grep -qi "debian" /etc/os-release; then
+        echo "Debian-based system"
+    else
+        message_error "This script is designed for Debian-based systems."
+        exit 1
+    fi
 }
 
-docker() {
-    # https://docs.docker.com/engine/install/ubuntu/
-    installing "Docker"
-
-    apt update
-    apt install -y \
-        ca-certificates \
-        curl \
-        gnupg \
-        lsb-release
-
-    apt update
-    install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-    chmod a+r /etc/apt/keyrings/docker.asc
-
-    echo \
-    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-    $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
-    tee /etc/apt/sources.list.d/docker.list > /dev/null
-    apt update
-
-    apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+check_zenity() {
+    # Check if Zenity is installed
+    if ! command -v zenity &> /dev/null; then
+        message_installing "Zenity"
+        apt install -y zenity
+    fi
 }
-
-
-go() {
-    # go to https://go.dev/dl/ to download the latest
-    installing "Go 1.24.2"
-
-    rm -rf /usr/local/go
-
-    wget https://go.dev/dl/go1.24.2.linux-amd64.tar.gz
-
-    tar -C /usr/local -xzf ./go1.24.2.linux-amd64.tar.gz
-
-    echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
-
-    source ~/.bashrc
-
-    rm ./go1.24.2.linux-amd64.tar.gz
-
-    go version
-}
-
-
-vscode() {
-    # https://code.visualstudio.com/download
-    installing "Visual Studio Code"
-
-    wget -O vscode.deb "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
-
-    apt install ./vscode.deb
-
-    update-alternatives --set editor /usr/bin/code
-
-    rm ./vscode.deb
-}
-
-intellij() {
-    installing "intellij-idea-community"
-    local url="https://download.jetbrains.com/idea/ideaIC-2024.1.tar.gz"
-    local tmp_dir="/tmp/intellij"
-    local install_dir="/opt/intellij"
-    local desktop_file="/usr/share/applications/intellij-idea-community.desktop"
-
-    echo "📥 Downloading IntelliJ IDEA Community Edition..."
-    mkdir -p "$tmp_dir"
-    wget -O "$tmp_dir/idea.tar.gz" "$url"
-
-    echo "📦 Extracting IntelliJ..."
-    sudo mkdir -p "$install_dir"
-    sudo tar -xzf "$tmp_dir/idea.tar.gz" --strip-components=1 -C "$install_dir"
-
-    echo "⚙️ Creating symlink..."
-    sudo ln -sf "$install_dir/bin/idea.sh" /usr/local/bin/intellij
-
-    echo "🖥️ Creating desktop entry..."
-    cat <<EOF | sudo tee "$desktop_file" > /dev/null
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=IntelliJ IDEA Community
-Icon=$install_dir/bin/idea.png
-Exec="$install_dir/bin/idea.sh" %f
-Comment=IntelliJ IDEA Community Edition
-Categories=Development;IDE;
-Terminal=false
-StartupWMClass=jetbrains-idea
-EOF
-
-    echo "✅ IntelliJ IDEA installed successfully!"
-    echo "👉 Launch it with: intellij"
-}
-
-pycharm() {
-    installing "PyCharm Community"
-    local url="https://download.jetbrains.com/python/pycharm-community-2024.1.tar.gz"
-    local tmp_dir="/tmp/pycharm"
-    local install_dir="/opt/pycharm"
-    local desktop_file="/usr/share/applications/pycharm-community.desktop"
-
-    echo "📥 Downloading PyCharm Community Edition..."
-    mkdir -p "$tmp_dir"
-    wget -O "$tmp_dir/pycharm.tar.gz" "$url"
-
-    echo "📦 Extracting PyCharm..."
-    sudo mkdir -p "$install_dir"
-    sudo tar -xzf "$tmp_dir/pycharm.tar.gz" --strip-components=1 -C "$install_dir"
-
-    echo "⚙️ Creating symlink..."
-    sudo ln -sf "$install_dir/bin/pycharm.sh" /usr/local/bin/pycharm
-
-    echo "🖥️ Creating desktop entry..."
-    cat <<EOF | sudo tee "$desktop_file" > /dev/null
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=PyCharm Community
-Icon=$install_dir/bin/pycharm.png
-Exec="$install_dir/bin/pycharm.sh" %f
-Comment=PyCharm Community Edition
-Categories=Development;IDE;Python;
-Terminal=false
-StartupWMClass=jetbrains-pycharm
-EOF
-
-    echo "✅ PyCharm installed successfully!"
-    echo "👉 Launch it with: pycharm"
-}
-
-
-ollama() {
-    # https://ollama.com/docs/installation
-    installing "Ollama"
-
-    curl -fsSL https://ollama.com/install.sh | sh
-}
-
-twingate() {
-    # https://docs.twingate.com/docs/linux-install
-    installing "Twingate"
-
-    curl -s https://binaries.twingate.com/client/linux/install.sh | sudo bash
-}
-
-numlock() {
-    # Enable NumLock on boot
-
-    apt install numlockx -y
-    echo "/usr/bin/numlockx on" >> /etc/gdm3/Init/Default
-
-    sed -i 's/exit 0//g' /etc/gdm3/Init/Default
-
-    echo "exit 0" >> /etc/gdm3/Init/Default
-}
-
-logid() {
-    install "logiops"
-
-    apt install logiops
-
-    cp -f ./logid.cfg /etc/logid.cfg
-    systemctl restart logid
-    echo "logid config modified"
-}
-
-python() {
-    # Install Python 3.12
-    installing "Python 3.12"
-
-    apt install python3.12 python3-pip python3-venv python3-dev python3-full -y
-
-    # Set Python 3.12 as default
-    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
-    update-alternatives --set python3 /usr/bin/python3.12
-}
-
-nodejs() {
-    # Install Node.js
-    installing "Node.js"
-
-    apt install -y nodejs
-}
-
-bun() {
-    installing "Bun"
-
-    curl -fsSL https://bun.sh/install | bash
-
-    # Add Bun to PATH
-    echo 'export PATH="$HOME/.bun/bin:$PATH"' >> ~/.bashrc
-    source ~/.bashrc
-}
-
-java() {
-    # Install Java
-    installing "Java"
-
-    apt install -y openjdk-20-jdk
-
-    # Set Java 20 as default
-    update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-20-openjdk-amd64/bin/java 1
-    update-alternatives --set java /usr/lib/jvm/java-20-openjdk-amd64/bin/java
-}
-
-kotlin() {
-    # Install Kotlin
-    installing "Kotlin"
-
-    apt install -y kotlin
-
-    # Set Kotlin as default
-    update-alternatives --install /usr/bin/kotlin kotlin /usr/bin/kotlin 1
-    update-alternatives --set kotlin /usr/bin/kotlin
-}
-
-php() {
-    # Install PHP
-    installing "PHP"
-
-    apt install -y php8.2 php8.2-cli php8.2-fpm php8.2-mysql php8.2-xml php8.2-mbstring php8.2-curl php8.2-zip
-
-    # Set PHP 8.2 as default
-    update-alternatives --install /usr/bin/php php /usr/bin/php8.2 1
-    update-alternatives --set php /usr/bin/php8.2
-}
-
-rust() {
-    # Install Rust
-    installing "Rust"
-
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
-    # Add Rust to PATH
-    echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
-    source ~/.bashrc
-}
-
-uninstall_rust() {
-    # Uninstall Rust
-    uninstall "Rust"
-
-    rustup self uninstall -y
-    rm -rf ~/.cargo
-    rm -rf ~/.rustup
-    rm -rf ~/.rustup-init.sh
-    rm -rf ~/.cargo/bin/rustup
-    rm -rf ~/.cargo/bin/rustc
-    rm -rf ~/.cargo/bin/cargo
-    rm -rf ~/.cargo/bin/rustdoc
-    rm -rf ~/.cargo/bin/rustfmt
-    rm -rf ~/.cargo/bin/rustup*
-}
-
-zen() {
-    # Install Zenkit
-    installing "Zenkit"
-
-    flatpak install flathub app.zen_browser.zen -y
-}
-
-chromium() {
-    # Install Chromium
-    installing "Chromium"
-
-    flatpak install flathub org.chromium.Chromium -y
-}
-
-opera() {
-    # Install Opera
-    installing "Opera"
-
-    flatpak install flathub com.opera.Opera -y
-}
-
-tor() {
-    # Install Tor
-    installing "Tor"
-
-    flatpak install flathub org.torproject.torbrowser-launcher -y
-}
-
-
-
-
-
-
