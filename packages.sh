@@ -12,6 +12,7 @@ ESSENTIALS=(
     "LM Sensors" "apt" "lm-sensors" ON
     "GnuPG" "apt" "gnupg" ON
     "LSB Release" "apt" "lsb-release" ON
+    "Plank" "apt" "plank" ON
     "Wget" "apt" "wget" ON
     "Curl" "apt" "curl" ON
     "Git" "apt" "git" ON
@@ -58,6 +59,11 @@ DEVELOPMENT=(
     "PyCharm" "func" "pycharm" OFF
     "IntelliJ IDEA" "func" "intellij-idea" OFF
     "Python 3.12" "func" "python" ON
+    "MariaDB" "apt" "mariadb-server" ON
+    "MySQL" "apt" "mysql-server-8.0" OFF
+    "Redis" "apt" "redis-server" OFF
+    "SQLite" "apt" "sqlite3" OFF
+    "PostgreSQL" "apt" "postgresql" OFF
     ".NET SDK 8.0" "apt" "dotnet-sdk-8.0" ON
     "Go Programming Language" "func" "golang" ON
     "Bun JavaScript Runtime" "func" "bun" ON
