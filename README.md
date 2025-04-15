@@ -1,2 +1,2 @@
 # linux_config
-my linux config
+Peronnal package Installer / Configuration manager using Zenity
