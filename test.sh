@@ -55,6 +55,8 @@ PACMAN=(
     TRUE "steam"
     TRUE "qbittorrent"
     TRUE "os-prober"
+    TRUE "neofetch"
+    TRUE "mesa-demos"
 )
 
 # Show zenity checklist for a group
