@@ -67,14 +67,58 @@ DEVELOPMENT=(
     ".NET SDK 8.0" "apt" "dotnet-sdk-8.0" ON
     "Go Programming Language" "func" "golang" ON
     "Bun JavaScript Runtime" "func" "bun" ON
-    "Node.js" "func" "nodejs" OFF
-    "Java 20" "func" "java" OFF
-    "Kotlin" "func" "kotlin" OFF
-    "PHP 8.2" "func" "php" OFF
-    "Rust" "func" "rust" OFF
 )
 
 CONFIGURATIONS=(
     "Oh My Posh - Craver" "func" "oh-my-posh" ON
     "Numlock on boot" "func" "numlock" ON
+)
+
+
+AUR=(
+    "Brave Browser" "brave-bin" ON
+    "VS Code" "visual-studio-code-bin" ON
+    "Beekeeper Studio" "beekeeper-studio-bin" ON
+    "Postman" "postman-bin" ON
+    "Bun" "bun-bin" ON
+
+    "Oh My Posh" "oh-my-posh-bin" ON
+    "Twingate" "twingate-bin" ON
+)
+
+PACMAN=(
+    "VIM" "vim" ON
+    "Neovim" "neovim" ON
+    "Docker" "docker" ON
+    "Discord" "discord" ON
+    "Ollama" "ollama" ON
+    "GIMP" "gimp" OFF
+    "LibreOffice" "libreoffice-fresh" OFF
+    "Intellij Idea Community" "intellij-idea-community-edition" OFF
+    "PyCharm Community" "	pycharm-community-edition" OFF
+    "golang" "go" ON
+    "Python 3.13" "python" ON
+    "dotnet-sdk-8.0" "dotnet-sdk-8.0" ON
+    "Node.js" "nodejs" OFF
+    "Java 17" "jdk17-openjdk" OFF
+    "Java 20" "jdk20-openjdk" OFF
+    "Kotlin" "kotlin" OFF
+    "PHP 8.2" "php" OFF
+    "Rust" "rustup" OFF
+    "MariaDB" "mariadb" ON
+    "MySQL" "mysql" OFF
+    "Redis" "redis" OFF
+    "PostgreSQL" "postgresql" OFF
+    "Numlock on boot" "numlockx" ON
+    "Curl" "curl" ON
+    "Wget" "wget" ON
+    "HTop" "htop" ON
+    "PowerTop" "powertop" ON
+    "LM Sensors" "lm_sensors" ON
+    "GnuPG" "gnupg" ON
+    "CA Certificates" "ca-certificates" ON
+    "VLC" "vlc" ON
+    "Steam" "steam" ON
+    "qBittorrent" "qbittorrent" ON
+    "OS-Prober" "os-prober" ON
 )
