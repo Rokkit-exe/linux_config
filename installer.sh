@@ -1,12 +1,44 @@
 #!/bin/bash
 
+cat ./ascii.txt
+echo
+echo "Welcome to the Arch Linux Installer Script!"
+
+# Check if running on Arch based system
+if [ ! -f /etc/arch-release ]; then
+    echo "This script is intended for Arch Linux or Arch-based systems."
+    exit 1
+fi
+
+message() {
+    echo -e "\n--------------------------------------------------------------------------------"
+    echo -e "🔧 $1"
+    sleep 1
+}
+
 # Check dependencies
-for cmd in zenity yay; do
-    command -v $cmd >/dev/null 2>&1 || {
-        echo "$cmd is not installed. Install it first."
-        exit 1
-    }
-done
+if ! command -v yay &> /dev/null; then
+    echo "yay is not installed."
+    message "Installing yay..."
+    # Install yay
+    sudo pacman -S --needed git base-devel
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si --noconfirm
+    cd ..
+    rm -rf yay
+fi
+
+# Check if yay is installed
+if ! command -v zenity &> /dev/null; then
+    echo "zenity is not installed."
+    message "Installing zenity..."
+
+    # Install zenity
+    sudo pacman -S --noconfirm --needed zenity
+fi
+
+
 
 # Define AUR packages
 AUR=(
@@ -110,4 +142,46 @@ if [ ${#pacman_array[@]} -gt 0 ]; then install_with_pacman "${pacman_array[@]}";
 if [ ${#aur_array[@]} -gt 0 ]; then install_with_yay "${aur_array[@]}"; fi
 
 echo -e "\n✅ All selected packages installed."
-echo "Please restart your system to apply changes."
+
+
+# check if oh-my-posh is installed
+if command -v oh-my-posh &> /dev/null; then
+    echo "oh-my-posh is already installed."
+    message "Configuring Oh-My-Posh with Theme: Craver and installing font: Firacode, Meslo..."
+    echo 'eval "$(oh-my-posh init bash --config 'https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/craver.omp.json')"' >> ~/.bashrc
+
+    oh-my-posh font install meslo
+    oh-my-posh font install firacode
+else
+    echo "oh-my-posh is not installed."
+fi
+
+
+# check if sddm is installed
+if [ -f /etc/sddm.conf ]; then
+    echo "sddm is installed, configuring..."
+    # Check if numlockx is installed
+    if command -v numlockx &> /dev/null; then
+        message "numlockx is installed, configuring..."
+        # Enable numlockx for sddm
+        sudo sed -i 's/^#NumLock=.*/NumLock=on/' /etc/sddm.conf
+        echo "numlockx configured for sddm."
+    else
+        echo "numlockx is not installed"
+    fi
+else
+    echo "sddm is not installed, skipping configuration for numlockx..."
+fi
+
+
+echo "--------------------------------------------------------------------------------"
+echo "System needs to be rebooted for changes to take effect."
+read -p "Do you want to reboot now? (y/N): " choice
+if [[ $choice == "y" || $choice == "Y" ]]; then
+    echo "Rebooting..."
+    sleep 1
+    sudo reboot
+else
+    echo "Reboot cancelled. Please reboot your system manually to apply changes."
+fi
+
