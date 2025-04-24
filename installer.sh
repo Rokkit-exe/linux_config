@@ -27,6 +27,8 @@ if ! command -v yay &> /dev/null; then
     makepkg -si --noconfirm
     cd ..
     rm -rf yay
+else
+    echo "yay is already installed."
 fi
 
 # Check if yay is installed
@@ -48,7 +50,7 @@ AUR=(
     TRUE "postman-bin"
     TRUE "bun-bin"
     TRUE "oh-my-posh-bin"
-    TRUE "twingate-bin"
+    TRUE "etcher-bin"
 )
 
 # Define Pacman packages
@@ -58,37 +60,20 @@ PACMAN=(
     TRUE "docker"
     TRUE "discord"
     TRUE "ollama"
-    FALSE "gimp"
-    FALSE "libreoffice-fresh"
-    FALSE "intellij-idea-community-edition"
-    FALSE "pycharm-community-edition"
     TRUE "go"
     TRUE "python"
-    TRUE "dotnet-sdk-8.0"
-    FALSE "nodejs"
-    FALSE "jdk17-openjdk"
-    FALSE "jdk20-openjdk"
-    FALSE "kotlin"
-    FALSE "php"
-    FALSE "rustup"
     TRUE "mariadb"
-    FALSE "mysql"
-    FALSE "redis"
-    FALSE "postgresql"
     TRUE "numlockx"
     TRUE "curl"
     TRUE "wget"
     TRUE "htop"
     TRUE "powertop"
     TRUE "lm_sensors"
-    TRUE "gnupg"
-    TRUE "ca-certificates"
     TRUE "vlc"
     TRUE "steam"
     TRUE "qbittorrent"
-    TRUE "os-prober"
     TRUE "neofetch"
-    TRUE "mesa-demos"
+    TRUE "thunderbird"
 )
 
 # Show zenity checklist for a group
@@ -171,6 +156,19 @@ if [ -f /etc/sddm.conf ]; then
     fi
 else
     echo "sddm is not installed, skipping configuration for numlockx..."
+fi
+
+message "Configuring mouted drives..."
+read -p "Would you like to mount the storage drive? (y/N): " choice
+if [[ $choice == "y" || $choice == "Y" ]]; then
+    echo "Mounting storage drive..."
+    sudo mkdir -p /mnt/storage
+    echo "# /dev/sda" | sudo tee -a /etc/fstab > /dev/null
+    echo "UUID=1aa44f69-7eed-4464-9b6f-8a847f9b8366 /mnt/storage   ext4    defaults,nofail  0   2" | sudo tee -a /etc/fstab > /dev/null
+    sudo mount -a
+    sudo systemctl daemon-reload
+else
+    echo "Skipping storage drive mount."
 fi
 
 
