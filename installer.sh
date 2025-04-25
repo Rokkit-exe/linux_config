@@ -171,6 +171,21 @@ else
     echo "Skipping storage drive mount."
 fi
 
+message "Configuring USB wakeup..."
+read -p "Would you like to disable USB wakeup? (y/N): " choice
+if [[ $choice == "y" || $choice == "Y" ]]; then
+    echo "Disabling USB wakeup for device XHC0, XHC1, XHC2..."
+    # check /proc/acpi/wakeup to validate
+    sudo cp disable-usb-wake.sh /usr/local/bin/disable-usb-wake.sh
+    sudo chmod +x /usr/local/bin/disable-usb-wake.sh
+    sudo cp disable-usb-wake.service /etc/systemd/system/disable-usb-wake.service
+    sudo systemctl enable disable-usb-wake.service
+    sudo systemctl start disable-usb-wake.service
+    echo "USB wakeup disabled for device XHC0, XHC1, XHC2."
+else
+    echo "Skipping USB wakeup configuration."
+fi
+
 
 echo "--------------------------------------------------------------------------------"
 echo "System needs to be rebooted for changes to take effect."

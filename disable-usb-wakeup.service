@@ -1,10 +1,11 @@
 [Unit]
 Description=Disable USB Wakeup Devices (XHC0, XHC1, XHC2)
-After=suspend.target
+After=multi-user.target
 
 [Service]
 Type=oneshot
-ExecStart=/bin/sh -c "echo XHC0 > /proc/acpi/wakeup; echo XHC1 > /proc/acpi/wakeup; echo XHC2 > /proc/acpi/wakeup"
+ExecStart=/usr/local/bin/disable-usb-wake.sh
 
 [Install]
-WantedBy=sleep.target
+WantedBy=multi-user.target
+
