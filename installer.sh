@@ -186,6 +186,17 @@ else
     echo "Skipping USB wakeup configuration."
 fi
 
+message "Installing Cider V2 from arch package"
+read -p "Would you like to install Cider V2? (y/N): " choice
+if [[ $choice == "y" || $choice == "Y" ]]; then
+    if [[ -f "/mnt/storage/cider/cider-v2.0.3-linux-x64.pkg.tar.zst" ]]; then
+        sudo pacman -U --noconfirm --needed /mnt/storage/cider/cider-v2.0.3-linux-x64.pkg.tar.zst
+    else
+        echo "Unable to find Cider v2 package in storage drive"
+    fi
+else
+    echo "Skipping Cider installation"
+fi
 
 echo "--------------------------------------------------------------------------------"
 echo "System needs to be rebooted for changes to take effect."
@@ -197,4 +208,3 @@ if [[ $choice == "y" || $choice == "Y" ]]; then
 else
     echo "Reboot cancelled. Please reboot your system manually to apply changes."
 fi
-
