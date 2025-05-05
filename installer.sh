@@ -129,16 +129,38 @@ if [ ${#aur_array[@]} -gt 0 ]; then install_with_yay "${aur_array[@]}"; fi
 echo -e "\n✅ All selected packages installed."
 
 
-# check if oh-my-posh is installed
-if command -v oh-my-posh &> /dev/null; then
-    echo "oh-my-posh is already installed."
-    message "Configuring Oh-My-Posh with Theme: Craver and installing font: Firacode, Meslo..."
-    echo 'eval "$(oh-my-posh init bash --config 'https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/craver.omp.json')"' >> ~/.bashrc
+message "Configuring Shell"
+read -p "Would you like to use ZSH instead of bash ? (y/N): " choice
+if [[ $choice == "y" || $choice == "Y" ]]; then
+    echo "Installing ZSH..."
+    sudo pacman -S --noconfirm --needed zsh
 
-    oh-my-posh font install meslo
-    oh-my-posh font install firacode
+    echo "Setting ZSH as default shell..."
+    chsh -s $(which zsh)
+    echo "ZSH installed and set as default shell."
 else
-    echo "oh-my-posh is not installed."
+    echo "Keeping bash as default shell."
+fi
+
+message "Configuring Oh-My-ZSH"
+read -p "Would you like to install Oh-My-ZSH? (y/N): " choice
+if [[ $choice == "y" || $choice == "Y" ]]; then
+    echo "Installing Oh-My-ZSH..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    echo "Oh-My-ZSH installed."
+else
+    echo "Skipping Oh-My-ZSH installation."
+fi
+
+read -p "Would you like to install ZSH plugins? (y/N): " choice
+if [[ $choice == "y" || $choice == "Y" ]]; then
+  echo "Installing ZSH plugins: (zsh-autosuggestions, zsh-syntax-highlighting, zsh-completions, z)..."
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-completions ~/.oh-my-zsh/custom/plugins/zsh-completions
+    sed -i 's/plugins=(.*)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions zsh-completions z)/' ~/.zshrc
+else
+    echo "Skipping ZSH plugins installation."
 fi
 
 
