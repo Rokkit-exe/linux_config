@@ -159,6 +159,8 @@ if [[ $choice == "y" || $choice == "Y" ]]; then
     git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
     git clone https://github.com/zsh-users/zsh-completions ~/.oh-my-zsh/custom/plugins/zsh-completions
     sed -i 's/plugins=(.*)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions zsh-completions z)/' ~/.zshrc
+    echo "autoload -Uz compinit" >> ~/.zshrc
+    echo "compinit" >> ~/.zshrc
 else
     echo "Skipping ZSH plugins installation."
 fi
