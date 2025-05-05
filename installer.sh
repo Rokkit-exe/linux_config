@@ -180,7 +180,7 @@ message "Wezterm configuration"
 read "Would you like to get Frank's config for Wezterm ? (y/N)" choice
 
 if [[ $choice == "y" || $choice == "Y"]]; then
-  cp ./.wezterm.lua /home/frank
+  cp wezterm.lua /home/frank/.wezterm.lua
 else
   echo "Skipping configuration of wezterm"
 fi
