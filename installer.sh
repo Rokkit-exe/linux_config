@@ -57,6 +57,7 @@ AUR=(
 PACMAN=(
     TRUE "vim"
     TRUE "neovim"
+    TRUE "wezterm"
     TRUE "docker"
     TRUE "discord"
     TRUE "ollama"
@@ -165,6 +166,24 @@ else
     echo "Skipping ZSH plugins installation."
 fi
 
+message "Neovim Configuration"
+read "Would you like to install Lazy.vim ? (y/N): " choice
+if [[ $choice == "y" || $choice == "Y"]]; then
+  echo "Installing Lazy.vim"
+  git clone https://github.com/LazyVim/starter ~/.config/nvim
+  rm -rf ~/.config/nvim/.git
+else
+  echo "Skipping installation of Lazy.vim"
+fi
+
+message "Wezterm configuration"
+read "Would you like to get Frank's config for Wezterm ? (y/N)" choice
+
+if [[ $choice == "y" || $choice == "Y"]]; then
+  cp ./.wezterm.lua /home/frank
+else
+  echo "Skipping configuration of wezterm"
+fi
 
 # check if sddm is installed
 if [ -f /etc/sddm.conf ]; then
