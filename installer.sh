@@ -49,15 +49,12 @@ AUR=(
     TRUE "beekeeper-studio-bin"
     TRUE "postman-bin"
     TRUE "bun-bin"
-    TRUE "oh-my-posh-bin"
     TRUE "etcher-bin"
 )
 
 # Define Pacman packages
 PACMAN=(
-    TRUE "vim"
     TRUE "neovim"
-    TRUE "wezterm"
     TRUE "docker"
     TRUE "discord"
     TRUE "ollama"
@@ -69,12 +66,28 @@ PACMAN=(
     TRUE "wget"
     TRUE "htop"
     TRUE "powertop"
+    TRUE "radeontop"
     TRUE "lm_sensors"
     TRUE "vlc"
     TRUE "steam"
     TRUE "qbittorrent"
     TRUE "neofetch"
     TRUE "thunderbird"
+)
+
+WAYLAND=(
+    TRUE "hyprland"
+    TRUE "hyprpaper"
+    TRUE "hyprlock"
+    TRUE "hypridle"
+    TRUE "hyprshot"
+    TRUE "hyprpicker"
+    TRUE "waybar"
+    TRUE "swaync"
+    TRUE "wofi"
+    TRUE "kitty"
+    TRUE "ttf-font-awesome"
+    TRUE "stow"
 )
 
 # Show zenity checklist for a group
@@ -117,14 +130,17 @@ install_with_yay() {
 
 # Run selection dialogs
 pacman_pkgs=$(select_packages "Install Official (pacman) Packages" PACMAN)
+wayland_pkgs=$(select_packages "Install packages for wayland" WAYLAND)
 aur_pkgs=$(select_packages "Install AUR Packages with yay" AUR)
 
 # Parse selected packages into arrays
 IFS="|" read -ra pacman_array <<< "$pacman_pkgs"
+IFS="|" read -ra wayland_array <<< "$wayland_pkgs"
 IFS="|" read -ra aur_array <<< "$aur_pkgs"
 
 # Install
 if [ ${#pacman_array[@]} -gt 0 ]; then install_with_pacman "${pacman_array[@]}"; fi
+if [ ${#wayland_array[@]} -gt 0 ]; then install_with_pacman "${wayland_array[@]}"; fi
 if [ ${#aur_array[@]} -gt 0 ]; then install_with_yay "${aur_array[@]}"; fi
 
 echo -e "\n✅ All selected packages installed."
