@@ -48,6 +48,8 @@ AUR=(
   TRUE "postman-bin"
   TRUE "bun-bin"
   TRUE "etcher-bin"
+  TRUE "hyprshot"
+  TRUE "catppuccin-gtk-theme-mocha"
 )
 
 # Define Pacman packages
@@ -78,7 +80,6 @@ WAYLAND=(
   TRUE "hyprpaper"
   TRUE "hyprlock"
   TRUE "hypridle"
-  TRUE "hyprshot"
   TRUE "hyprpicker"
   TRUE "waybar"
   TRUE "swaync"
@@ -90,7 +91,6 @@ WAYLAND=(
   TRUE "pavucontrol"
   TRUE "pamixer"
   TRUE "thunar"
-  TRUE "catppuccin-gtk-theme-mocha"
 )
 
 # Show zenity checklist for a group
