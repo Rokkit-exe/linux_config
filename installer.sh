@@ -88,6 +88,11 @@ WAYLAND=(
     TRUE "kitty"
     TRUE "ttf-font-awesome"
     TRUE "stow"
+    TRUE "nwg-look"
+    TRUE "pavucontrol"
+    TRUE "pamixer"
+    TRUE "thunar"
+    TRUE "catppuccin-gtk-theme-mocha"
 )
 
 # Show zenity checklist for a group
@@ -146,41 +151,6 @@ if [ ${#aur_array[@]} -gt 0 ]; then install_with_yay "${aur_array[@]}"; fi
 echo -e "\n✅ All selected packages installed."
 
 
-message "Configuring Shell"
-read -p "Would you like to use ZSH instead of bash ? (y/N): " choice
-if [[ $choice == "y" || $choice == "Y" ]]; then
-    echo "Installing ZSH..."
-    sudo pacman -S --noconfirm --needed zsh
-
-    echo "Setting ZSH as default shell..."
-    chsh -s $(which zsh)
-    echo "ZSH installed and set as default shell."
-else
-    echo "Keeping bash as default shell."
-fi
-
-message "Configuring Oh-My-ZSH"
-read -p "Would you like to install Oh-My-ZSH? (y/N): " choice
-if [[ $choice == "y" || $choice == "Y" ]]; then
-    echo "Installing Oh-My-ZSH..."
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    echo "Oh-My-ZSH installed."
-else
-    echo "Skipping Oh-My-ZSH installation."
-fi
-
-read -p "Would you like to install ZSH plugins? (y/N): " choice
-if [[ $choice == "y" || $choice == "Y" ]]; then
-  echo "Installing ZSH plugins: (zsh-autosuggestions, zsh-syntax-highlighting, zsh-completions, z)..."
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-    git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-    git clone https://github.com/zsh-users/zsh-completions ~/.oh-my-zsh/custom/plugins/zsh-completions
-    sed -i 's/plugins=(.*)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions zsh-completions z)/' ~/.zshrc
-    echo "autoload -Uz compinit" >> ~/.zshrc
-    echo "compinit" >> ~/.zshrc
-else
-    echo "Skipping ZSH plugins installation."
-fi
 
 message "Neovim Configuration"
 read "Would you like to install Lazy.vim ? (y/N): " choice
@@ -190,31 +160,6 @@ if [[ $choice == "y" || $choice == "Y"]]; then
   rm -rf ~/.config/nvim/.git
 else
   echo "Skipping installation of Lazy.vim"
-fi
-
-message "Wezterm configuration"
-read "Would you like to get Frank's config for Wezterm ? (y/N)" choice
-
-if [[ $choice == "y" || $choice == "Y"]]; then
-  cp wezterm.lua /home/frank/.wezterm.lua
-else
-  echo "Skipping configuration of wezterm"
-fi
-
-# check if sddm is installed
-if [ -f /etc/sddm.conf ]; then
-    echo "sddm is installed, configuring..."
-    # Check if numlockx is installed
-    if command -v numlockx &> /dev/null; then
-        message "numlockx is installed, configuring..."
-        # Enable numlockx for sddm
-        sudo sed -i 's/^#NumLock=.*/NumLock=on/' /etc/sddm.conf
-        echo "numlockx configured for sddm."
-    else
-        echo "numlockx is not installed"
-    fi
-else
-    echo "sddm is not installed, skipping configuration for numlockx..."
 fi
 
 message "Configuring mouted drives..."
@@ -256,6 +201,43 @@ if [[ $choice == "y" || $choice == "Y" ]]; then
 else
     echo "Skipping Cider installation"
 fi
+
+message "Configuring Shell"
+read -p "Would you like to use ZSH instead of bash ? (y/N): " choice
+if [[ $choice == "y" || $choice == "Y" ]]; then
+    echo "Installing ZSH..."
+    sudo pacman -S --noconfirm --needed zsh
+
+    echo "Setting ZSH as default shell..."
+    chsh -s $(which zsh)
+    echo "ZSH installed and set as default shell."
+else
+    echo "Keeping bash as default shell."
+fi
+
+message "Configuring Oh-My-ZSH"
+read -p "Would you like to install Oh-My-ZSH? (y/N): " choice
+if [[ $choice == "y" || $choice == "Y" ]]; then
+    echo "Installing Oh-My-ZSH..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    echo "Oh-My-ZSH installed."
+else
+    echo "Skipping Oh-My-ZSH installation."
+fi
+
+read -p "Would you like to install ZSH plugins? (y/N): " choice
+if [[ $choice == "y" || $choice == "Y" ]]; then
+  echo "Installing ZSH plugins: (zsh-autosuggestions, zsh-syntax-highlighting, zsh-completions, z)..."
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-completions ~/.oh-my-zsh/custom/plugins/zsh-completions
+    sed -i 's/plugins=(.*)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions zsh-completions z)/' ~/.zshrc
+    echo "autoload -Uz compinit" >> ~/.zshrc
+    echo "compinit" >> ~/.zshrc
+else
+    echo "Skipping ZSH plugins installation."
+fi
+
 
 echo "--------------------------------------------------------------------------------"
 echo "System needs to be rebooted for changes to take effect."
