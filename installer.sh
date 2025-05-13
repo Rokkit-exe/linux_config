@@ -49,3 +49,5 @@ configuration "Storage drive" configure_drive
 configuration "USB Wakeup" configure_wakeup
 configuration "Cider V2" configure_cider
 configuration "ZSH / Oh-My-Zsh" configure_zsh
+configuration "sddm theme" configure_sddm_theme
+configuration "GRUB" configure_grub

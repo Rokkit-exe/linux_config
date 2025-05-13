@@ -172,3 +172,57 @@ configure_kitty() {
   cp ./kitty/current-themes.conf ~/.config/kitty/current-themes.conf
 }
 
+configure_dotfiles() {
+  git clone https://github.com/Rokkit-exe/dotfiles.git /home/frank/
+  if [[ ! command -v stow $>/dev/null ]]; then
+    echo "Stow is not installed"
+    sudo pacman -S --noconfirm --needed stow
+  fi
+
+  stow --adopt /home/frank/dotfiles/hypr/
+  stow --adopt /home/frank/dotfiles/waybar/
+  stow --adopt /home/frank/dotfiles/kitty/
+  stow --adopt /home/frank/dotfiles/zshrc/
+  stow --adopt /home/frank/dotfiles/nvim/
+}
+
+
+configure_sddm_theme() {
+  sddm_config_dir="/etc/sddm.conf.d"
+  sddm_config_path="$sddm_config_dir/theme.conf.user"
+  sddm_theme_dir="/usr/share/sddm/themes"
+  sddm_theme_path="$sddm_theme_dir/simple-sddm-2"
+  sddm_background_path="$sddm_theme_path/Backgrounds"
+  background_path="/mnt/storage/wallpaper/background.jpg"
+  simple_config="$sddm_theme_dir/theme.conf"
+
+  yay -S --noconfirm --needed simple-sddm-theme-2-git
+
+  if [[ -d $sddm_theme_path ]]; then
+    sudo mkdir -p $sddm_config_path
+    touch sddm_config_path
+    sudo echo "[Theme]" >> sddm_config_path
+    sudo echo "Current=simple-sddm-2" >> sddm_config_path
+    sudo cp $background_path $sddm_background_path
+    sed -i "s|^Background=.*$|Background=\"Backgrounds/background.jpg\"" $simple_config
+  else
+    echo "theme not found"
+  fi
+}
+
+configure_grub() { 
+  theme_path="/mnt/storage/grub_theme/arch/"
+  grub_themes_dir="/boot/grub/themes/"
+  grub_theme_path=$grub_themes_dir/arch
+  grub_config="/etc/default/grub"
+
+  if [[ -d /mnt/storage/grub_theme/arch ]]; then
+    sudo cp -r $theme_path $grub_themes_dir
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+    sudo sed -i "s|^.*GRUB_DISABLE_RECOVERY=.*$|GRUB_DISABLE_RECOVERY=false" $grub_config
+    sudo sed -i "s|^.*GRUB_THEME=.*$|GRUB_THEME=$grub_theme_path" $grub_config
+    sudo sed -i "s|^.*GRUB_DISABLE_OS_PROBER=.*$|GRUB_DISABLE_OS_PROBER=false" $grub_config
+  else
+    echo "Grub theme does not exist in $theme_path"
+  fi
+}

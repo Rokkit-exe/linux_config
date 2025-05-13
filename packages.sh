@@ -21,6 +21,7 @@ AUR=(
   TRUE "etcher-bin"
   TRUE "hyprshot"
   TRUE "catppuccin-gtk-theme-mocha"
+  TRUE "simple-sddm-theme-2-git"
 )
 
 # Define Pacman packages
