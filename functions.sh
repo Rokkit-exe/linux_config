@@ -218,10 +218,11 @@ configure_grub() {
 
   if [[ -d /mnt/storage/grub_theme/arch ]]; then
     sudo cp -r $theme_path $grub_themes_dir
-    sudo grub-mkconfig -o /boot/grub/grub.cfg
     sudo sed -i "s|^.*GRUB_DISABLE_RECOVERY=.*$|GRUB_DISABLE_RECOVERY=false" $grub_config
     sudo sed -i "s|^.*GRUB_THEME=.*$|GRUB_THEME=$grub_theme_path/theme.txt" $grub_config
     sudo sed -i "s|^.*GRUB_DISABLE_OS_PROBER=.*$|GRUB_DISABLE_OS_PROBER=false" $grub_config
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+
   else
     echo "Grub theme does not exist in $theme_path"
   fi
